@@ -144,7 +144,7 @@
     <div class="summary-row">
       <div class="summary-card"><p class="summary-card-label">Total paid to date</p><p class="summary-card-value">฿972,908.75</p></div>
       <div class="summary-card"><p class="summary-card-label">Rent settled through</p><p class="summary-card-value green">July 2026</p></div>
-      <div class="summary-card"><p class="summary-card-label">Outstanding balance</p><p class="summary-card-value green">฿0.00</p></div>
+      <div class="summary-card" style="border-color:#0D7377;"><p class="summary-card-label">Credit balance</p><p class="summary-card-value" style="color:#0D7377;">฿3,000.00</p></div>
     </div>
 
     <!-- Section 1 -->
@@ -224,7 +224,45 @@
 
     <div class="grand-total">
       <div><p class="grand-total-label">Grand total paid to date</p><p class="grand-total-value">฿972,908.75</p></div>
-      <div style="text-align:right;"><p class="grand-total-status">✓ Outstanding balance: ฿0.00</p><p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">As of 10 April 2026</p></div>
+      <div style="text-align:right;"><p class="grand-total-status">✓ Credit in tenant's favour: ฿3,000.00</p><p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">As of 10 April 2026</p></div>
+    </div>
+
+    <!-- Credit explanation -->
+    <div class="section" style="padding-top:1.5rem;">
+      <div class="section-header"><div class="section-num" style="background:#0D7377;">4</div><p class="section-title">Credit balance — amount owed to tenant</p></div>
+      <table>
+        <thead><tr><th>Item</th><th>Detail</th><th>Amount (THB)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Upfront transfer — 4 February 2026</td>
+            <td><span class="note">Actual Revolut transfer to FourCha account 142-0-626036</span></td>
+            <td class="amount">933,750.00</td>
+          </tr>
+          <tr>
+            <td>Receipted by FourCha office</td>
+            <td><span class="note">Receipt 2569/02/06/01 (335,750) + Receipt 2569/02/06/02 (595,000)</span></td>
+            <td class="amount" style="color:#cc0000;">− 930,750.00</td>
+          </tr>
+          <tr style="background:var(--teal-light);">
+            <td><strong>Unreceipted difference</strong></td>
+            <td><span class="note">Paid on 4 Feb but not accounted for in any FourCha receipt — likely February utilities overpaid</span></td>
+            <td class="amount" style="color:#0D7377;"><strong>= 3,000.00</strong></td>
+          </tr>
+          <tr>
+            <td>Utilities paid 10 April 2026</td>
+            <td><span class="note">18,500 THB covers Feb–Jul utilities (6 × 3,000) + 500 undercharge. However February utilities appear already included in the original 933,750 THB transfer above — making February utilities paid twice.</span></td>
+            <td class="amount" style="color:#0D7377;">3,000.00 overpaid</td>
+          </tr>
+          <tr style="background:var(--teal-light);">
+            <td><strong>Total credit in tenant's favour</strong></td>
+            <td><span class="note">To be confirmed with FourCha office and credited against next electricity invoice</span></td>
+            <td class="amount" style="color:#0D7377;"><strong>฿3,000.00</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="background:#e8f5f5;border-left:4px solid #0D7377;border-radius:0 8px 8px 0;padding:0.85rem 1.25rem;margin-top:1rem;font-size:13px;color:#0D7377;line-height:1.7;">
+        <strong>Note to FourCha office:</strong> Please confirm the above credit of 3,000 THB and apply it against the next electricity invoice (April 2026, expected ~1 May 2026). If the calculation is incorrect please advise with supporting receipts.
+      </div>
     </div>
 
   </div><!-- end tab-payments -->

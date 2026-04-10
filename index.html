@@ -314,10 +314,21 @@
     if (!preview) return;
     const wrap = document.createElement('div');
     wrap.className = 'doc-thumb-wrap';
-    const img = document.createElement('img');
-    img.className = 'doc-thumb';
-    img.src = dataUrl;
-    img.onclick = () => { document.getElementById('lightbox-img').src = dataUrl; document.getElementById('lightbox').classList.add('active'); };
+    const isPdf = fileName.toLowerCase().endsWith('.pdf') || dataUrl.startsWith('data:application/pdf');
+    if (isPdf) {
+      const pdfBox = document.createElement('div');
+      pdfBox.style.cssText = 'width:120px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:10px 8px;text-align:center;cursor:pointer;';
+      pdfBox.innerHTML = '<div style="font-size:24px;margin-bottom:4px;">📄</div><div style="font-size:10px;color:#0D7377;font-weight:500;">View PDF</div>';
+      pdfBox.onclick = () => { const w = window.open(); w.document.write('<iframe src="' + dataUrl + '" style="width:100%;height:100vh;border:none;"></iframe>'); };
+      wrap.appendChild(pdfBox);
+    } else {
+      const img = document.createElement('img');
+      img.className = 'doc-thumb';
+      const mime = dataUrl.startsWith('data:image/jpeg') || dataUrl.includes('/9j/') ? 'image/jpeg' : 'image/png';
+      img.src = dataUrl.replace(/^data:image\/[^;]+/, 'data:' + mime);
+      img.onclick = () => { document.getElementById('lightbox-img').src = img.src; document.getElementById('lightbox').classList.add('active'); };
+      wrap.appendChild(img);
+    }
     const nameEl = document.createElement('div');
     nameEl.className = 'doc-name';
     nameEl.textContent = fileName;
@@ -330,7 +341,7 @@
       if (pwd === 'sierra21') { await deleteDoc(dbId); wrap.remove(); }
       else if (pwd !== null) { alert('Incorrect password.'); }
     };
-    wrap.appendChild(img); wrap.appendChild(nameEl); wrap.appendChild(removeBtn);
+    wrap.appendChild(nameEl); wrap.appendChild(removeBtn);
     preview.appendChild(wrap);
   }
 

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 7 — Payment Record</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0f2744;
+    --teal: #0D7377;
+    --teal-light: #e8f5f5;
+    --green: #1a6b45;
+    --green-light: #e8f5ee;
+    --amber: #92550a;
+    --amber-light: #fef3e2;
+    --gray: #64748b;
+    --gray-light: #f8fafc;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f1f5f9;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+  }
+
+  /* Header */
+  .page-header {
+    background: var(--navy);
+    padding: 2.5rem 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::after {
+    content: '';
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: rgba(13,115,119,0.25);
+  }
+  .header-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0.5rem;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: #fff;
+    margin-bottom: 0.25rem;
+  }
+  .header-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 1.5rem;
+  }
+  .header-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .meta-item { }
+  .meta-label { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+  .meta-value { font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 400; }
+
+  /* Notice box */
+  .notice {
+    background: var(--teal-light);
+    border-left: 4px solid var(--teal);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 2.5rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--teal);
+    line-height: 1.7;
+  }
+
+  /* Summary cards */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 0 2.5rem 1.5rem;
+  }
+  .summary-card {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+  }
+  .summary-card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px; }
+  .summary-card-value { font-size: 22px; font-weight: 500; color: var(--text); }
+  .summary-card-value.green { color: var(--green); }
+
+  /* Section */
+  .section { padding: 0 2.5rem 2rem; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 13px; font-weight: 500; color: var(--text); letter-spacing: 0.02em; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    background: var(--gray-light);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  tr:last-child td { border-bottom: none; }
+  .note { font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px; }
+  .amount { font-variant-numeric: tabular-nums; font-weight: 500; white-space: nowrap; }
+  .total-row td { background: #f1f5f9; font-weight: 500; }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .badge-paid { background: var(--green-light); color: var(--green); }
+  .badge-upfront { background: #e0f0ff; color: #0c4a7c; }
+  .badge-covered { background: #f1f5f9; color: var(--text-muted); }
+  .badge-nil { background: var(--green-light); color: var(--green); font-weight: 600; }
+
+  /* Grand total */
+  .grand-total {
+    margin: 0 2.5rem 2rem;
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .grand-total-label { font-size: 14px; color: rgba(255,255,255,0.7); }
+  .grand-total-value { font-family: 'DM Serif Display', serif; font-size: 26px; color: #fff; }
+  .grand-total-status { font-size: 12px; color: #6ee7b7; font-weight: 500; margin-top: 4px; text-align: right; }
+
+  /* Footer */
+  .page-footer {
+    background: var(--gray-light);
+    border-top: 1px solid var(--border);
+    padding: 1.25rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .footer-left { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .footer-right { font-size: 11px; color: var(--text-muted); }
+
+  @media (max-width: 600px) {
+    .page-header, .section, .notice { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .summary-row { grid-template-columns: 1fr; padding-left: 1.25rem; padding-right: 1.25rem; }
+    .grand-total { margin-left: 1.25rem; margin-right: 1.25rem; flex-direction: column; gap: 0.5rem; }
+    .page-footer { padding: 1rem 1.25rem; }
+    th, td { padding: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <p class="header-label">Payment Record</p>
+    <h1 class="header-title">Unit 7 — 33/12 Soi Langsuan</h1>
+    <p class="header-sub">Lumphini, Pathumwan, Bangkok 10330</p>
+    <div class="header-meta">
+      <div class="meta-item">
+        <p class="meta-label">Tenant</p>
+        <p class="meta-value">James Williams-Raahauge &amp; Angeline Ibarra</p>
+      </div>
+      <div class="meta-item">
+        <p class="meta-label">Landlord</p>
+        <p class="meta-value">FourCha Co., Ltd.</p>
+      </div>
+      <div class="meta-item">
+        <p class="meta-label">Lease period</p>
+        <p class="meta-value">6 February 2026 – 28 February 2027</p>
+      </div>
+      <div class="meta-item">
+        <p class="meta-label">Document date</p>
+        <p class="meta-value">10 April 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notice -->
+  <div class="notice">
+    <strong>Important:</strong> Rent and service charge (119,000 THB/month combined) are paid in full through July 2026 via upfront transfer on 4 February 2026. Utilities flat charge (3,000 THB/month) is now settled in full through July 2026. <strong>From May 2026 onwards, only electricity invoices are required.</strong>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="summary-row">
+    <div class="summary-card">
+      <p class="summary-card-label">Total paid to date</p>
+      <p class="summary-card-value">฿972,908.75</p>
+    </div>
+    <div class="summary-card">
+      <p class="summary-card-label">Rent settled through</p>
+      <p class="summary-card-value green">July 2026</p>
+    </div>
+    <div class="summary-card">
+      <p class="summary-card-label">Outstanding balance</p>
+      <p class="summary-card-value green">฿0.00</p>
+    </div>
+  </div>
+
+  <!-- Section 1: Upfront -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <p class="section-title">Upfront payment — 4 February 2026</p>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Period</th>
+          <th>Amount (THB)</th>
+          <th>Status</th>
+          <th>Payment detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Deposit (2 months, refundable)
+            <span class="note">Returned at lease end per contract</span>
+          </td>
+          <td>—</td>
+          <td class="amount">238,000.00</td>
+          <td><span class="badge badge-upfront">Paid</span></td>
+          <td rowspan="2">
+            <span class="note">Revolut CHF account<br>→ นางณินทิรา โสกณพนิช<br>Acct: 142-0-626036<br>4 Feb 2026 at 18:36<br><strong>Total transferred: ฿933,750.00</strong></span>
+          </td>
+        </tr>
+        <tr>
+          <td>Rent + service charge
+            <span class="note">119,000 THB/month × 6 months (pro-rated Feb)</span>
+          </td>
+          <td>Feb – Jul 2026</td>
+          <td class="amount">695,750.00</td>
+          <td><span class="badge badge-upfront">Paid</span></td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="2">Section 1 total</td>
+          <td class="amount">933,750.00</td>
+          <td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 2: Electricity -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <p class="section-title">Electricity — billed monthly by meter reading</p>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>kWh used</th>
+          <th>Rate (THB)</th>
+          <th>Amount (THB)</th>
+          <th>Status</th>
+          <th>Paid date &amp; reference</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>February 2026</td>
+          <td>714 kWh</td>
+          <td>8.75</td>
+          <td class="amount">6,702.50</td>
+          <td><span class="badge badge-paid">Paid</span></td>
+          <td><span class="note">4 Mar 2026, 12:12<br>→ นางณินทิรา โสกณพนิช<br>Ref: 2026030412122623...</span></td>
+        </tr>
+        <tr>
+          <td>March 2026
+            <span class="note">Invoice received 1 Apr — paid same day</span>
+          </td>
+          <td>1,595 kWh</td>
+          <td>8.75</td>
+          <td class="amount">13,956.25</td>
+          <td><span class="badge badge-paid">Paid</span></td>
+          <td><span class="note">1 Apr 2026, 10:02<br>→ บจ.สี่ชา<br>Ref: 20260401100223240...</span></td>
+        </tr>
+        <tr>
+          <td>April 2026 onwards</td>
+          <td colspan="2">To be invoiced monthly by meter reading</td>
+          <td class="amount">TBC</td>
+          <td><span class="badge badge-covered">Not yet due</span></td>
+          <td><span class="note">Payable on receipt of invoice</span></td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="3">Section 2 total paid to date</td>
+          <td class="amount">20,658.75</td>
+          <td colspan="2"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 3: Utilities -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <p class="section-title">Utilities flat charge — settled in full through July 2026</p>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Period</th>
+          <th>Amount (THB)</th>
+          <th>Status</th>
+          <th>Paid date &amp; reference</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Utilities flat charge (3,000 THB/month × 6)</td>
+          <td>Feb – Jul 2026</td>
+          <td class="amount">18,000.00</td>
+          <td><span class="badge badge-paid">Paid</span></td>
+          <td rowspan="2"><span class="note">10 Apr 2026<br>→ FourCha Co., Ltd<br>Acct: 142-0-626036<br>Ref: Unit 7 utilities Feb–Jul 2026<br><strong>Total: ฿18,500.00</strong></span></td>
+        </tr>
+        <tr>
+          <td>February undercharge (per April invoice)</td>
+          <td>Feb 2026</td>
+          <td class="amount">500.00</td>
+          <td><span class="badge badge-paid">Paid</span></td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="2">Section 3 total</td>
+          <td class="amount">18,500.00</td>
+          <td colspan="2"><span class="note">No utility invoices required until August 2026</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Grand total -->
+  <div class="grand-total">
+    <div>
+      <p class="grand-total-label">Grand total paid to date</p>
+      <p class="grand-total-value">฿972,908.75</p>
+    </div>
+    <div style="text-align:right;">
+      <p class="grand-total-status">✓ Outstanding balance: ฿0.00</p>
+      <p style="font-size:12px; color:rgba(255,255,255,0.45); margin-top:4px;">As of 10 April 2026</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <div class="footer-left">
+      <strong>James Williams-Raahauge &amp; Angeline Ibarra</strong><br>
+      Unit 7, 33/12 Soi Langsuan, Lumphini, Bangkok 10330<br>
+      joapwr@gmail.com
+    </div>
+    <div class="footer-right">
+      Prepared 10 April 2026<br>
+      For: FourCha Co., Ltd. / Khun Chuensook Komarakul
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

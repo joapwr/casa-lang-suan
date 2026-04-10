@@ -295,8 +295,16 @@
 
           const remove = document.createElement('button');
           remove.className = 'doc-remove';
-          remove.textContent = '✕';
-          remove.onclick = function() { wrap.remove(); };
+          remove.title = 'Remove document';
+          remove.textContent = '🔒';
+          remove.onclick = function() {
+            const pwd = prompt('Enter password to remove this document:');
+            if (pwd === 'sierra21') {
+              wrap.remove();
+            } else if (pwd !== null) {
+              alert('Incorrect password.');
+            }
+          };
 
           wrap.appendChild(img);
           wrap.appendChild(name);

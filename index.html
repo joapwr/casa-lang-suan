@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 7 — Payment Record</title>
-<!-- v5 supabase-persist -->
+<!-- v6 self-contained: receipts served from repo, no external DB -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -110,11 +110,11 @@
   <!-- TAB 1: PAYMENTS -->
   <div id="tab-payments" class="tab-content active">
     <div class="notice">
-      <strong>Important:</strong> Rent and service charge (119,000 THB/month combined) are paid in full through July 2026 via upfront transfer on 4 February 2026. Utilities flat charge settled in full through July 2026. <strong>From May 2026 onwards, only electricity invoices are required.</strong>
+      <strong>Important:</strong> The 4 February 2026 upfront transfer covered rent, service charge and utilities through July 2026. <strong>From August 2026, monthly billing resumes:</strong> rent + service charge (119,000 THB/month incl. VAT), plus electricity by meter. The August 2026 invoice carried no separate 3,000 THB utilities flat charge — it appears now absorbed into the service charge.
     </div>
     <div class="summary-row">
-      <div class="summary-card"><p class="summary-card-label">Total paid to date</p><p class="summary-card-value">฿1,000,288.75</p></div>
-      <div class="summary-card"><p class="summary-card-label">Rent settled through</p><p class="summary-card-value green">July 2026</p></div>
+      <div class="summary-card"><p class="summary-card-label">Total paid to date</p><p class="summary-card-value">฿1,129,211.25</p></div>
+      <div class="summary-card"><p class="summary-card-label">Rent settled through</p><p class="summary-card-value green">August 2026</p></div>
       <div class="summary-card" style="border-color:#0D7377;"><p class="summary-card-label">Credit balance</p><p class="summary-card-value" style="color:#0D7377;">฿0.00</p></div>
     </div>
 
@@ -167,8 +167,13 @@
             <td><span class="note">1 Jul 2026, 09:25<br>→ บจ.สี่ชา<br>Paid in full: 9,458.75<br>Bank ref: 318277</span></td>
             <td class="doc-cell"><label class="doc-upload-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Add document<input type="file" class="doc-input" data-slot="elec-jun" accept="image/*,.pdf" multiple></label><div class="doc-preview" id="preview-elec-jun"></div><span class="saving-indicator" id="saving-elec-jun">Saving...</span></td>
           </tr>
-          <tr><td>July 2026 onwards</td><td colspan="2">Invoiced monthly by meter reading</td><td class="amount">TBC</td><td><span class="badge badge-covered">Not yet due</span></td><td><span class="note">Payable on receipt of invoice</span></td><td class="doc-cell">—</td></tr>
-          <tr class="total-row"><td colspan="3">Section 2 total paid to date <span class="note">(฿51,038.75 invoiced − ฿3,000 credit applied)</span></td><td class="amount">48,038.75</td><td colspan="3"></td></tr>
+          <tr>
+            <td>July 2026<span class="note">Invoice dated 31 Jul 2026 (due 4 Aug) — paid 2 Aug. Meter 64,092→65,226. Paid in full.</span></td><td>1,134</td><td>8.75</td><td class="amount">9,922.50</td><td><span class="badge badge-paid">Paid</span></td>
+            <td><span class="note">2 Aug 2026, 10:37<br>→ บจ.สี่ชา<br>Paid in full: 9,922.50<br>Bank ref: 324000</span></td>
+            <td class="doc-cell"><label class="doc-upload-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Add document<input type="file" class="doc-input" data-slot="elec-jul" accept="image/*,.pdf" multiple></label><div class="doc-preview" id="preview-elec-jul"></div><span class="saving-indicator" id="saving-elec-jul">Saving...</span></td>
+          </tr>
+          <tr><td>August 2026 onwards</td><td colspan="2">Invoiced monthly by meter reading</td><td class="amount">TBC</td><td><span class="badge badge-covered">Not yet due</span></td><td><span class="note">Payable on receipt of invoice</span></td><td class="doc-cell">—</td></tr>
+          <tr class="total-row"><td colspan="3">Section 2 total paid to date <span class="note">(฿60,961.25 invoiced − ฿3,000 credit applied)</span></td><td class="amount">57,961.25</td><td colspan="3"></td></tr>
         </tbody>
       </table>
     </div>
@@ -185,19 +190,37 @@
             <td rowspan="2" class="doc-cell"><label class="doc-upload-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Add document<input type="file" class="doc-input" data-slot="utilities" accept="image/*,.pdf" multiple></label><div class="doc-preview" id="preview-utilities"></div><span class="saving-indicator" id="saving-utilities">Saving...</span></td>
           </tr>
           <tr><td>February undercharge</td><td>Feb 2026</td><td class="amount">500.00</td><td><span class="badge badge-paid">Paid</span></td></tr>
-          <tr class="total-row"><td colspan="2">Section 3 total</td><td class="amount">18,500.00</td><td colspan="3"><span class="note">No utility invoices required until August 2026</span></td></tr>
+          <tr class="total-row"><td colspan="2">Section 3 total</td><td class="amount">18,500.00</td><td colspan="3"><span class="note">Prepaid Feb–Jul. The August 2026 invoice carried no separate utilities flat charge (see note at top).</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 4: Monthly rent & service -->
+    <div class="section">
+      <div class="section-header"><div class="section-num">4</div><p class="section-title">Monthly rent &amp; service charge — resumes August 2026</p></div>
+      <table>
+        <thead><tr><th>Item</th><th>Period</th><th>Amount (THB)</th><th>Status</th><th>Payment detail</th><th>Documents</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Rent + service charge<span class="note">Rent ฿60,000 (incl VAT) + service ฿59,000 (incl VAT). Invoice dated 31 Jul 2026, due 4 Aug.</span></td>
+            <td>August 2026</td><td class="amount">119,000.00</td><td><span class="badge badge-paid">Paid</span></td>
+            <td><span class="note">4 Aug 2026 · Revolut SWIFT<br>$3,573.79 = ฿119,000<br>→ Four cha company Ltd<br>Ref: unit 7 Langsuan</span></td>
+            <td class="doc-cell"><label class="doc-upload-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Add document<input type="file" class="doc-input" data-slot="rent-aug" accept="image/*,.pdf" multiple></label><div class="doc-preview" id="preview-rent-aug"></div><span class="saving-indicator" id="saving-rent-aug">Saving...</span></td>
+          </tr>
+          <tr><td>Rent + service charge</td><td>September 2026 onwards</td><td class="amount">TBC</td><td><span class="badge badge-covered">Not yet due</span></td><td><span class="note">Billed monthly; payable on receipt</span></td><td class="doc-cell">—</td></tr>
+          <tr class="total-row"><td colspan="2">Section 4 total paid to date</td><td class="amount">119,000.00</td><td colspan="3"></td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="grand-total">
-      <div><p class="grand-total-label">Grand total paid to date</p><p class="grand-total-value">฿1,000,288.75</p></div>
-      <div style="text-align:right;"><p class="grand-total-status">✓ Credit fully applied — balance ฿0.00</p><p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">As of 1 July 2026</p></div>
+      <div><p class="grand-total-label">Grand total paid to date</p><p class="grand-total-value">฿1,129,211.25</p></div>
+      <div style="text-align:right;"><p class="grand-total-status">✓ Rent settled through Aug 2026 · credit balance ฿0.00</p><p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">As of 4 August 2026</p></div>
     </div>
 
     <!-- Section 4: Credit -->
     <div class="section" style="padding-top:1.5rem;">
-      <div class="section-header"><div class="section-num" style="background:#0D7377;">4</div><p class="section-title">Credit balance — amount owed to tenant by FourCha</p></div>
+      <div class="section-header"><div class="section-num" style="background:#0D7377;">5</div><p class="section-title">Credit balance — amount owed to tenant by FourCha</p></div>
       <table>
         <thead><tr><th>Item</th><th>Detail</th><th>Amount (THB)</th></tr></thead>
         <tbody>
@@ -298,15 +321,26 @@
         <div class="doc-preview" id="preview-inv-jun"></div><span class="saving-indicator" id="saving-inv-jun">Saving...</span>
       </div>
 
+      <div class="invoice-card">
+        <p class="invoice-card-ref">Invoice 31 July 2026</p>
+        <p class="invoice-card-title">Electricity — July 2026</p>
+        <p class="invoice-card-date">Paid: 2 August 2026, 10:37</p>
+        <p class="invoice-card-amount">฿9,922.50</p>
+        <p class="invoice-card-note">1,134 kWh × 8.75 THB/kWh (meter 64,092→65,226). Paid in full. Bangkok Bank ref 324000. FourCha invoice attached covers the full August cycle (rent + service + electricity).</p>
+        <hr class="invoice-divider">
+        <label class="doc-upload-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload receipt<input type="file" class="doc-input" data-slot="inv-jul" accept="image/*,.pdf" multiple></label>
+        <div class="doc-preview" id="preview-inv-jul"></div><span class="saving-indicator" id="saving-inv-jul">Saving...</span>
+      </div>
+
       <div class="invoice-card" style="border-style:dashed;background:transparent;">
         <p class="invoice-card-ref">Next invoice</p>
-        <p class="invoice-card-title">Electricity — July 2026</p>
-        <p class="invoice-card-date">Expected: ~1 August 2026</p>
+        <p class="invoice-card-title">Electricity — August 2026</p>
+        <p class="invoice-card-date">Expected: ~1 September 2026</p>
         <p class="invoice-card-amount" style="color:var(--text-muted);">TBC</p>
         <p class="invoice-card-note">Payable on receipt of invoice</p>
         <hr class="invoice-divider">
-        <label class="doc-upload-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload when received<input type="file" class="doc-input" data-slot="inv-jul" accept="image/*,.pdf" multiple></label>
-        <div class="doc-preview" id="preview-inv-jul"></div><span class="saving-indicator" id="saving-inv-jul">Saving...</span>
+        <label class="doc-upload-btn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload when received<input type="file" class="doc-input" data-slot="inv-aug" accept="image/*,.pdf" multiple></label>
+        <div class="doc-preview" id="preview-inv-aug"></div><span class="saving-indicator" id="saving-inv-aug">Saving...</span>
       </div>
 
     </div>
@@ -314,7 +348,7 @@
 
   <div class="page-footer">
     <div class="footer-left"><strong>James Williams-Raahauge &amp; Angeline Ibarra</strong><br>Unit 7, 33/12 Soi Langsuan, Lumphini, Bangkok 10330 · joapwr@gmail.com</div>
-    <div class="footer-right">Prepared 1 May 2026<br>For: FourCha Co., Ltd. / Khun Chuensook Komarakul</div>
+    <div class="footer-right">Updated 4 August 2026<br>For: FourCha Co., Ltd. / Khun Chuensook Komarakul</div>
   </div>
 </div>
 
@@ -324,9 +358,6 @@
 </div>
 
 <script>
-  const SUPABASE_URL = 'https://avlarmqzlhmvfdltyhxv.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF2bGFybXF6bGhtdmZkbHR5aHh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMDk3MDAsImV4cCI6MjA4ODc4NTcwMH0.ZXk9VoBRmmzjIH6DHTODZQGWdSI4cq45nancFR2MEDk';
-
   function showTab(name, el) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -334,88 +365,57 @@
     el.classList.add('active');
   }
 
-  async function saveDoc(slotId, fileName, fileType, fileData) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/cls_documents`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=representation' },
-      body: JSON.stringify({ slot_id: slotId, file_name: fileName, file_type: fileType, file_data: fileData })
-    });
-    const data = await res.json();
-    return data[0]?.id;
-  }
+  // Documents are committed into the repo under /receipts and served by GitHub Pages.
+  // Fully self-contained — no external database.
+  const DOCS = {
+    'upfront':   ['upfront.png'],
+    'utilities': ['utilities.png'],
+    'elec-feb':  ['elec-feb.png'],
+    'elec-mar':  ['elec-mar.png'],
+    'elec-apr':  ['elec-apr-1.png','elec-apr-2.png'],
+    'elec-may':  ['elec-may-1.png','elec-may-2.png'],
+    'elec-jun':  ['elec-jun.png'],
+    'elec-jul':  ['elec-jul.png'],
+    'inv-01':    ['inv-01.pdf'],
+    'inv-02':    ['inv-02.pdf'],
+    'inv-03':    ['inv-03.pdf'],
+    'inv-04':    ['inv-04-1.pdf','inv-04-2.png'],
+    'inv-apr':   ['inv-apr.png'],
+    'inv-may':   ['inv-may.png'],
+    'inv-jun':   ['inv-jun.png'],
+    'inv-jul':   ['inv-jul.png'],
+    'rent-aug':  ['rent-aug.png']
+  };
 
-  async function deleteDoc(id) {
-    await fetch(`${SUPABASE_URL}/rest/v1/cls_documents?id=eq.${id}`, {
-      method: 'DELETE',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-  }
-
-  async function loadDocs() {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/cls_documents?select=*&order=created_at.asc`, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-    const docs = await res.json();
-    docs.forEach(doc => renderThumb(doc.slot_id, doc.file_data, doc.file_name, doc.id));
-  }
-
-  function renderThumb(slotId, dataUrl, fileName, dbId) {
-    const preview = document.getElementById('preview-' + slotId);
-    if (!preview) return;
-    const wrap = document.createElement('div');
-    wrap.className = 'doc-thumb-wrap';
-    const isPdf = fileName.toLowerCase().endsWith('.pdf') || dataUrl.startsWith('data:application/pdf');
-    if (isPdf) {
-      const pdfBox = document.createElement('div');
-      pdfBox.style.cssText = 'width:120px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:10px 8px;text-align:center;cursor:pointer;';
-      pdfBox.innerHTML = '<div style="font-size:24px;margin-bottom:4px;">📄</div><div style="font-size:10px;color:#0D7377;font-weight:500;">View PDF</div>';
-      pdfBox.onclick = () => { const w = window.open(); w.document.write('<iframe src="' + dataUrl + '" style="width:100%;height:100vh;border:none;"></iframe>'); };
-      wrap.appendChild(pdfBox);
-    } else {
-      const img = document.createElement('img');
-      img.className = 'doc-thumb';
-      const mime = dataUrl.startsWith('data:image/jpeg') || dataUrl.includes('/9j/') ? 'image/jpeg' : 'image/png';
-      img.src = dataUrl.replace(/^data:image\/[^;]+/, 'data:' + mime);
-      img.onclick = () => { document.getElementById('lightbox-img').src = img.src; document.getElementById('lightbox').classList.add('active'); };
-      wrap.appendChild(img);
-    }
-    const nameEl = document.createElement('div');
-    nameEl.className = 'doc-name';
-    nameEl.textContent = fileName;
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'doc-remove';
-    removeBtn.textContent = '🔒';
-    removeBtn.title = 'Password required to remove';
-    removeBtn.onclick = async () => {
-      const pwd = prompt('Enter password to remove this document:');
-      if (pwd === 'sierra21') { await deleteDoc(dbId); wrap.remove(); }
-      else if (pwd !== null) { alert('Incorrect password.'); }
-    };
-    wrap.appendChild(nameEl); wrap.appendChild(removeBtn);
-    preview.appendChild(wrap);
-  }
-
-  document.querySelectorAll('.doc-input').forEach(input => {
-    input.addEventListener('change', function() {
-      const slotId = this.dataset.slot;
-      const saving = document.getElementById('saving-' + slotId);
-      Array.from(this.files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          if (saving) { saving.style.display = 'block'; saving.textContent = 'Saving...'; }
-          const dbId = await saveDoc(slotId, file.name, file.type, e.target.result);
-          renderThumb(slotId, e.target.result, file.name, dbId);
-          if (saving) { saving.textContent = 'Saved ✓'; setTimeout(() => saving.style.display = 'none', 2000); }
-        };
-        reader.readAsDataURL(file);
+  function renderDocs() {
+    Object.keys(DOCS).forEach(function(slot) {
+      var preview = document.getElementById('preview-' + slot);
+      if (!preview) return;
+      DOCS[slot].forEach(function(f) {
+        var url = 'receipts/' + f;
+        var wrap = document.createElement('div');
+        wrap.className = 'doc-thumb-wrap';
+        if (f.toLowerCase().endsWith('.pdf')) {
+          var box = document.createElement('div');
+          box.style.cssText = 'width:120px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:10px 8px;text-align:center;cursor:pointer;';
+          box.innerHTML = '<div style="font-size:24px;margin-bottom:4px;">\uD83D\uDCC4</div><div style="font-size:10px;color:#0D7377;font-weight:500;">View PDF</div>';
+          box.onclick = function(){ window.open(url, '_blank'); };
+          wrap.appendChild(box);
+        } else {
+          var img = document.createElement('img');
+          img.className = 'doc-thumb';
+          img.src = url; img.loading = 'lazy';
+          img.onclick = function(){ document.getElementById('lightbox-img').src = url; document.getElementById('lightbox').classList.add('active'); };
+          wrap.appendChild(img);
+        }
+        preview.appendChild(wrap);
       });
-      this.value = '';
     });
-  });
+    document.querySelectorAll('.doc-upload-btn, .saving-indicator').forEach(function(e){ e.style.display = 'none'; });
+  }
 
   document.getElementById('lightbox').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
-
-  loadDocs();
+  renderDocs();
 </script>
 </body>
 </html>

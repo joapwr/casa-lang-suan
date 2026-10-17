@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saranchol 27C — Tenancy Record</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0f2744; --teal: #0D7377; --teal-light: #e8f5f5;
+    --green: #1a6b45; --green-light: #e8f5ee;
+    --amber: #8a5a00; --amber-light: #fff6e0;
+    --gray-light: #f8fafc; --border: #e2e8f0;
+    --text: #1e293b; --text-muted: #64748b; --white: #ffffff;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: #f1f5f9; color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
+  .chapters { max-width: 960px; margin: 0 auto 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; font-size: 12px; }
+  .chapters a { text-decoration: none; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); background: #fff; color: var(--text-muted); }
+  .chapters a.current { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .page { max-width: 960px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 40px rgba(0,0,0,0.08); }
+  .page-header { background: var(--navy); padding: 2.5rem 2.5rem 2rem; position: relative; overflow: hidden; }
+  .page-header::after { content: ''; position: absolute; right: -60px; top: -60px; width: 240px; height: 240px; border-radius: 50%; background: rgba(13,115,119,0.25); }
+  .header-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.5rem; }
+  .header-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: #fff; margin-bottom: 0.25rem; }
+  .header-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 1.5rem; }
+  .header-meta { display: flex; gap: 2rem; flex-wrap: wrap; position: relative; z-index: 1; }
+  .meta-label { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+  .meta-value { font-size: 13px; color: rgba(255,255,255,0.85); }
+  .tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border); background: var(--gray-light); }
+  .tab { padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--navy); border-bottom-color: var(--navy); background: var(--white); }
+  .tab-content { display: none; padding-top: 1.5rem; }
+  .tab-content.active { display: block; }
+  .notice { background: var(--teal-light); border-left: 4px solid var(--teal); padding: 1rem 1.5rem; margin: 0 2.5rem 1.5rem; border-radius: 0 8px 8px 0; font-size: 13px; color: var(--teal); line-height: 1.7; }
+  .notice.amber { background: var(--amber-light); border-left-color: #d49b00; color: var(--amber); }
+  .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; padding: 0 2.5rem 1.5rem; }
+  .summary-card { background: var(--gray-light); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; }
+  .summary-card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px; }
+  .summary-card-value { font-size: 22px; font-weight: 500; color: var(--text); }
+  .summary-card-value.green { color: var(--green); }
+  .summary-card-value.teal { color: var(--teal); }
+  .section { padding: 0 2.5rem 2rem; }
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .section-num { width: 24px; height: 24px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .section-title { font-size: 13px; font-weight: 500; color: var(--text); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); padding: 8px 12px; background: var(--gray-light); border-bottom: 1px solid var(--border); }
+  td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text); line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  .note { font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px; }
+  .amount { font-variant-numeric: tabular-nums; font-weight: 500; white-space: nowrap; }
+  .total-row td { background: #f1f5f9; font-weight: 500; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .badge-paid { background: var(--green-light); color: var(--green); }
+  .badge-sent { background: #e0f0ff; color: #0c4a7c; }
+  .badge-open { background: var(--amber-light); color: var(--amber); }
+  .badge-later { background: #f1f5f9; color: var(--text-muted); }
+  .terms { list-style: none; font-size: 13px; line-height: 1.6; }
+  .terms li { padding: 8px 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 200px 1fr; gap: 1rem; }
+  .terms li:last-child { border-bottom: none; }
+  .terms .k { color: var(--text-muted); }
+  .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+  .doc-card { background: var(--gray-light); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; }
+  .doc-card.pending { border-style: dashed; background: transparent; }
+  .doc-card-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .doc-card-date { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .doc-card-note { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+  .doc-link { display: inline-block; font-size: 12px; color: var(--teal); text-decoration: none; border: 1px solid var(--teal); border-radius: 6px; padding: 4px 10px; background: var(--teal-light); }
+  .thumb { max-width: 140px; max-height: 100px; border-radius: 6px; border: 1px solid var(--border); object-fit: cover; cursor: pointer; display: block; }
+  .page-footer { background: var(--gray-light); border-top: 1px solid var(--border); padding: 1.25rem 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+  .footer-left { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .footer-right { font-size: 11px; color: var(--text-muted); }
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 1000; align-items: center; justify-content: center; }
+  .lightbox.active { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 92vh; border-radius: 8px; object-fit: contain; }
+  .lightbox-close { position: absolute; top: 1rem; right: 1.5rem; color: #fff; font-size: 28px; cursor: pointer; background: none; border: none; }
+  /* Phones: tables become stacked cards — no sideways scrolling */
+  @media (max-width: 640px) {
+    body { padding: 1rem 0.5rem; }
+    .page-header, .section, .page-footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .notice { margin-left: 1.25rem; margin-right: 1.25rem; }
+    .summary-row { grid-template-columns: 1fr; padding-left: 1.25rem; padding-right: 1.25rem; }
+    .tab { padding: 12px 14px; }
+    table, thead, tbody, tr, td { display: block; width: 100%; }
+    thead { display: none; }
+    tr { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.75rem; padding: 4px 0; }
+    td { border-bottom: none; padding: 6px 12px; }
+    td[data-l]::before { content: attr(data-l); display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+    .terms li { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="chapters">
+  <a href="../">Chapter 1 · Casa Langsuan, Bangkok (Feb–Oct 2026)</a>
+  <a href="./" class="current">Chapter 2 · Saranchol 27C, Wongamat (from Nov 2026)</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <p class="header-label">Tenancy Record</p>
+    <h1 class="header-title">Saranchol 27C — Wongamat</h1>
+    <p class="header-sub">312/75 (27C) Saranchol Condominium, Soi 18 Naklua Road, Banglamung, Chonburi 20150</p>
+    <div class="header-meta">
+      <div><p class="meta-label">Tenants</p><p class="meta-value">James Williams-Raahauge &amp; Angeline Ibarra</p></div>
+      <div><p class="meta-label">Owner</p><p class="meta-value">Mr. Sompong Phaoenchoke</p></div>
+      <div><p class="meta-label">Lease period</p><p class="meta-value">1 November 2026 – 31 October 2027</p></div>
+      <div><p class="meta-label">Last updated</p><p class="meta-value">17 October 2026</p></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('payments',this)">Payments</div>
+    <div class="tab" onclick="showTab('lease',this)">Lease &amp; documents</div>
+    <div class="tab" onclick="showTab('ted',this)">Ted (pet)</div>
+    <div class="tab" onclick="showTab('log',this)">Messages &amp; issues</div>
+  </div>
+
+  <!-- PAYMENTS -->
+  <div id="tab-payments" class="tab-content active">
+    <div class="notice">
+      Rent is <strong>฿80,000/month</strong>, due by the <strong>2nd of each month</strong> (clause 2.1). Electricity is paid direct to the PEA and water to the Saranchol Juristic Person (clause 4.2). The owner pays the CAM/common fee (clause 2.3).
+    </div>
+    <div class="summary-row">
+      <div class="summary-card"><p class="summary-card-label">Total sent to date</p><p class="summary-card-value">฿241,000</p></div>
+      <div class="summary-card"><p class="summary-card-label">Rent covered through</p><p class="summary-card-value green">November 2026</p></div>
+      <div class="summary-card"><p class="summary-card-label">Deposit held by owner</p><p class="summary-card-value teal">฿160,000</p></div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-num">1</div><p class="section-title">Deposit + first month's rent — 17 October 2026</p></div>
+      <table>
+        <thead><tr><th>Item</th><th>Period</th><th>Amount (THB)</th><th>Status</th><th>Payment detail</th><th>Document</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-l="Item">Security deposit (2 months)<span class="note">Refundable within 30 days of lease end (clause 3.2)</span></td>
+            <td data-l="Period">—</td>
+            <td data-l="Amount" class="amount">160,000.00</td>
+            <td data-l="Status"><span class="badge badge-sent">Sent</span></td>
+            <td data-l="Payment detail" rowspan="3"><span class="note">17 Oct 2026 · Revolut international transfer<br>→ Sompong Phaoenchoke, SCB ••••3813<br>Revolut ref: 1717581859<br>Expected to arrive: 19 Oct 2026<br><strong>Total sent: ฿241,000.00</strong></span></td>
+            <td data-l="Document" rowspan="3"><img class="thumb" src="docs/payment-2026-10-17-deposit-nov.png" alt="Revolut transfer confirmation" onclick="openImg(this.src)"><span class="note">Revolut confirmation (owner's address and account masked)</span></td>
+          </tr>
+          <tr>
+            <td data-l="Item">Rent<span class="note">First month — lease becomes valid once deposit + first rent are received (clause 3.4)</span></td>
+            <td data-l="Period">November 2026</td>
+            <td data-l="Amount" class="amount">80,000.00</td>
+            <td data-l="Status"><span class="badge badge-sent">Sent</span></td>
+          </tr>
+          <tr>
+            <td data-l="Item">Transfer-fee buffer<span class="note">Covers any bank charges. Anything unused to be credited against December rent.</span></td>
+            <td data-l="Period">—</td>
+            <td data-l="Amount" class="amount">1,000.00</td>
+            <td data-l="Status"><span class="badge badge-sent">Sent</span></td>
+          </tr>
+          <tr class="total-row"><td colspan="2">Section 1 total</td><td class="amount">241,000.00</td><td colspan="3"><span class="note">Awaiting receipt confirmation and owner's receipts</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-num">2</div><p class="section-title">Rent schedule</p></div>
+      <table>
+        <thead><tr><th>Period</th><th>Amount (THB)</th><th>Due</th><th>Status</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td data-l="Period">November 2026</td><td data-l="Amount" class="amount">80,000.00</td><td data-l="Due">2 Nov 2026</td><td data-l="Status"><span class="badge badge-sent">Sent 17 Oct</span></td><td data-l="Note"><span class="note">See Section 1</span></td></tr>
+          <tr><td data-l="Period">December 2026 – May 2027</td><td data-l="Amount" class="amount">480,000.00</td><td data-l="Due">Monthly by the 2nd</td><td data-l="Status"><span class="badge badge-later">Planned</span></td><td data-l="Note"><span class="note">Planned as one 6-month payment in mid-November, after move-in checks</span></td></tr>
+          <tr><td data-l="Period">June – October 2027</td><td data-l="Amount" class="amount">400,000.00</td><td data-l="Due">Monthly by the 2nd</td><td data-l="Status"><span class="badge badge-later">Not yet due</span></td><td data-l="Note"><span class="note">—</span></td></tr>
+          <tr class="total-row"><td>Total rent for the lease</td><td class="amount">960,000.00</td><td colspan="3"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-num">3</div><p class="section-title">Utilities — electricity (PEA) and water (Juristic Person)</p></div>
+      <table>
+        <thead><tr><th>Month</th><th>Electricity (THB)</th><th>Water (THB)</th><th>Status</th><th>Document</th></tr></thead>
+        <tbody>
+          <tr><td data-l="Month">November 2026 onwards</td><td data-l="Electricity">TBC</td><td data-l="Water">TBC</td><td data-l="Status"><span class="badge badge-later">Not yet due</span></td><td data-l="Document"><span class="note">Bills added here as they arrive. Record the meter reading at handover.</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LEASE -->
+  <div id="tab-lease" class="tab-content">
+    <div class="section">
+      <div class="section-header"><div class="section-num">1</div><p class="section-title">Key terms</p></div>
+      <ul class="terms">
+        <li><span class="k">Agreement</span><span>Residential Lease Agreement, final draft "Re1", dated 15 October 2026</span></li>
+        <li><span class="k">Term</span><span>12 months: 1 November 2026 – 31 October 2027</span></li>
+        <li><span class="k">Rent</span><span>฿80,000/month, paid in advance by the 2nd. Includes furniture and appliances (Annex A)</span></li>
+        <li><span class="k">Late payment</span><span>0.2% of rent per day. Grace period to the 15th if 7 days' written notice is given (clause 4.3)</span></li>
+        <li><span class="k">Deposit</span><span>฿160,000. Returned within 30 days of lease end, less any proven damage or arrears</span></li>
+        <li><span class="k">Valid from</span><span>Receipt of first rent + deposit (clause 3.4)</span></li>
+        <li><span class="k">Common fee (CAM)</span><span>Paid by the owner</span></li>
+        <li><span class="k">Utilities</span><span>Electricity to the PEA at the official rate; water to the Juristic Person</span></li>
+        <li><span class="k">Minor repairs</span><span>Tenant pays up to ฿2,000 per month. Excludes aircon, appliances, pre-existing defects and wear and tear (clause 4.13)</span></li>
+        <li><span class="k">Owner repairs</span><span>Owner maintains and repairs fixtures, fittings and appliances for wear and tear or any cause not the tenant's fault</span></li>
+        <li><span class="k">Access</span><span>48 hours' written notice and tenant's consent, except emergencies (clause 4.14)</span></li>
+        <li><span class="k">Defect reporting</span><span>Tenant to report defects within 7 days (clause 4.15)</span></li>
+        <li><span class="k">Pet</span><span>One dog permitted — Ted (clause 4.6, Annex B)</span></li>
+        <li><span class="k">Viewings</span><span>Only in the last 30 days, with written notice, unless the lease is being extended (clause 4.17)</span></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-num">2</div><p class="section-title">Documents</p></div>
+      <div class="doc-grid">
+        <div class="doc-card">
+          <p class="doc-card-title">Lease agreement — final draft Re1</p>
+          <p class="doc-card-date">Dated 15 Oct 2026 · received 14 Oct 2026</p>
+          <p class="doc-card-note">Unsigned agreed version. ID numbers, owner's address and bank account masked for this record.</p>
+          <a class="doc-link" href="docs/lease-27C-Re1-redacted.pdf" target="_blank">View PDF</a>
+        </div>
+        <div class="doc-card">
+          <p class="doc-card-title">Deposit + November rent — transfer confirmation</p>
+          <p class="doc-card-date">17 Oct 2026</p>
+          <p class="doc-card-note">Revolut, ฿241,000. Ref 1717581859.</p>
+          <a class="doc-link" href="#" onclick="openImg('docs/payment-2026-10-17-deposit-nov.png');return false;">View</a>
+        </div>
+        <div class="doc-card pending">
+          <p class="doc-card-title">Signed lease</p>
+          <p class="doc-card-date">Awaited</p>
+          <p class="doc-card-note">Check it matches Re1 before signing, including Annex A.</p>
+        </div>
+        <div class="doc-card pending">
+          <p class="doc-card-title">Annex A — furniture &amp; appliance list</p>
+          <p class="doc-card-date">Awaited</p>
+          <p class="doc-card-note">Check every item at handover. Note condition and anything missing.</p>
+        </div>
+        <div class="doc-card pending">
+          <p class="doc-card-title">Owner's receipts — deposit and November rent</p>
+          <p class="doc-card-date">Requested 17 Oct 2026</p>
+          <p class="doc-card-note">One receipt for the deposit and one for the rent.</p>
+        </div>
+        <div class="doc-card pending">
+          <p class="doc-card-title">Move-in condition video &amp; photos</p>
+          <p class="doc-card-date">At handover</p>
+          <p class="doc-card-note">Dated walkthrough of every room, with meter readings. Ideally done jointly with the agent.</p>
+        </div>
+        <div class="doc-card pending">
+          <p class="doc-card-title">TM30 receipt</p>
+          <p class="doc-card-date">Within 24 hours of move-in</p>
+          <p class="doc-card-note">Needed for 90-day reports and re-entry.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TED -->
+  <div id="tab-ted" class="tab-content">
+    <div class="notice">The lease permits <strong>one dog</strong> — Ted — on condition that building pet rules are followed (clause 4.6). If the building later bans pets through no fault of ours, we can end the lease without penalty and the deposit is returned.</div>
+    <div class="section">
+      <div class="section-header"><div class="section-num">1</div><p class="section-title">Ted's details (Annex B)</p></div>
+      <ul class="terms">
+        <li><span class="k">Name</span><span>Ted</span></li>
+        <li><span class="k">Breed</span><span>Border Terrier</span></li>
+        <li><span class="k">Age</span><span>14 years (Oct 2026)</span></li>
+        <li><span class="k">Weight</span><span>About 6.5 kg</span></li>
+        <li><span class="k">Microchip</span><span>Yes — number to add</span></li>
+        <li><span class="k">Vaccinations</span><span>Rabies and boosters, late August 2026</span></li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-num">2</div><p class="section-title">Documents</p></div>
+      <div class="doc-grid">
+        <div class="doc-card pending"><p class="doc-card-title">Annex B — Ted's details + photo</p><p class="doc-card-date">To supply for signing</p><p class="doc-card-note">Forms part of the lease.</p></div>
+        <div class="doc-card pending"><p class="doc-card-title">Vaccination record</p><p class="doc-card-date">To add</p><p class="doc-card-note">Rabies + boosters, Aug 2026.</p></div>
+        <div class="doc-card pending"><p class="doc-card-title">Saranchol pet rules</p><p class="doc-card-date">Ask the Juristic Person office</p><p class="doc-card-note">Lifts, lead rules, any registration needed.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div id="tab-log" class="tab-content">
+    <div class="section">
+      <div class="section-header"><div class="section-num">1</div><p class="section-title">Messages log — agent (Julia) and owner</p></div>
+      <table>
+        <thead><tr><th>Date</th><th>With</th><th>Summary</th></tr></thead>
+        <tbody>
+          <tr><td data-l="Date">Late Sep 2026</td><td data-l="With">Julia</td><td data-l="Summary">Unit 27C agreed at ฿80,000/month (listed at ฿88,000). Building confirmed pet-friendly.</td></tr>
+          <tr><td data-l="Date">Oct 2026</td><td data-l="With">Julia / owner</td><td data-l="Summary">Lease terms negotiated. Owner declined a 1 December start, so the start stays 1 November 2026.</td></tr>
+          <tr><td data-l="Date">14 Oct 2026</td><td data-l="With">Julia</td><td data-l="Summary">Final agreement "Re1" received (dated 15 Oct).</td></tr>
+          <tr><td data-l="Date">Oct 2026</td><td data-l="With">Julia</td><td data-l="Summary">Asked for early access from around 28 October to move in.</td></tr>
+          <tr><td data-l="Date">17 Oct 2026</td><td data-l="With">Julia</td><td data-l="Summary">Sent ฿241,000 (deposit + November rent + ฿1,000 fee buffer) with the slip. Asked for confirmation and receipts. Confirmed signing on the agreed Re1 terms.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-num">2</div><p class="section-title">Issues &amp; repairs</p></div>
+      <div class="notice amber" style="margin-left:0;margin-right:0;">Report any defect in writing within 7 days (clause 4.15). Aircon, appliances and pre-existing defects are the owner's to fix.</div>
+      <table>
+        <thead><tr><th>Item</th><th>Raised</th><th>Status</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td data-l="Item">Water heaters</td><td data-l="Raised">Before move-in</td><td data-l="Status"><span class="badge badge-open">Check at handover</span></td><td data-l="Note"><span class="note">Pre-move-in repair</span></td></tr>
+          <tr><td data-l="Item">Hob</td><td data-l="Raised">Before move-in</td><td data-l="Status"><span class="badge badge-open">Check at handover</span></td><td data-l="Note"><span class="note">Pre-move-in repair</span></td></tr>
+          <tr><td data-l="Item">Toilet seats</td><td data-l="Raised">Before move-in</td><td data-l="Status"><span class="badge badge-open">Check at handover</span></td><td data-l="Note"><span class="note">Pre-move-in repair</span></td></tr>
+          <tr><td data-l="Item">Folding doors</td><td data-l="Raised">Before move-in</td><td data-l="Status"><span class="badge badge-open">Check at handover</span></td><td data-l="Note"><span class="note">Pre-move-in repair</span></td></tr>
+          <tr><td data-l="Item">Rear office aircon — noise</td><td data-l="Raised">Before move-in</td><td data-l="Status"><span class="badge badge-open">Check at handover</span></td><td data-l="Note"><span class="note">Pre-move-in repair</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-left"><strong>James Williams-Raahauge &amp; Angeline Ibarra</strong><br>Unit 27C, Saranchol Condominium, Naklua, Chonburi 20150 · joapwr@gmail.com</div>
+    <div class="footer-right">Updated 17 October 2026<br>For: Mr. Sompong Phaoenchoke / agent</div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('active')">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  function showTab(name, el) {
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+    document.getElementById('tab-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+  function openImg(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('active');
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e){ if (e.target === this) this.classList.remove('active'); });
+</script>
+</body>
+</html>

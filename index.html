@@ -80,6 +80,9 @@
   .lightbox.active { display: flex; }
   .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; object-fit: contain; }
   .lightbox-close { position: absolute; top: 1rem; right: 1.5rem; color: #fff; font-size: 28px; cursor: pointer; background: none; border: none; }
+  .ac-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+  .ac-fig img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); cursor: zoom-in; display: block; }
+  .ac-fig figcaption { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
   @media (max-width: 600px) {
     .page-header, .section, .notice { padding-left: 1.25rem; padding-right: 1.25rem; }
     .summary-row, .invoice-grid { grid-template-columns: 1fr; padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -102,13 +105,14 @@
       <div><p class="meta-label">Tenants</p><p class="meta-value">James Williams-Raahauge &amp; Angeline Ibarra</p></div>
       <div><p class="meta-label">Landlord</p><p class="meta-value">FourCha Co., Ltd.</p></div>
       <div><p class="meta-label">Lease period</p><p class="meta-value">6 February 2026 – 28 February 2027</p></div>
-      <div><p class="meta-label">Last updated</p><p class="meta-value">2 October 2026</p></div>
+      <div><p class="meta-label">Last updated</p><p class="meta-value">20 October 2026</p></div>
     </div>
   </div>
 
   <div class="tabs">
     <div class="tab active" onclick="showTab('payments',this)">Payments made</div>
     <div class="tab" onclick="showTab('overcharge',this)">Electricity overcharge</div>
+    <div class="tab" onclick="showTab('aircon',this)">Aircon defects</div>
     <div class="tab" onclick="showTab('invoices',this)">FourCha Co. Ltd — invoice files</div>
   </div>
 
@@ -300,6 +304,41 @@
         </tbody>
       </table>
       <p class="note" style="margin-top:0.75rem;">kWh taken from each FourCha invoice (amount ÷ ฿8.75; meter readings shown where printed). Overcharge = kWh × (฿8.75 − ฿4.88) = ฿3.87 per kWh. Updated each month with the new invoice.</p>
+    </div>
+  </div>
+
+  <!-- TAB: AIRCON -->
+  <div id="tab-aircon" class="tab-content">
+    <div class="notice" style="background:#fff8eb;border-left-color:#b45309;color:#78350f;margin-top:1.5rem;">
+      <strong>Aircon defects — overview</strong><br>
+      6 Daikin ceiling cassette units, 20+ years old, running on R22 refrigerant (managed phase-out).<br>
+      Faults reported from 10 February 2026, four days after move-in, and repeatedly through May.<br>
+      May 2026: only 3 units replaced (master bedroom + 2 offices). Lounge and spare room left on the old R22 units.<br>
+      Lounge unit recommended for replacement in May as uneconomical to repair. Not replaced.<br>
+      Lounge unit failed again on 16 October 2026. Inspected 20 October 2026 — long-term corrosion found (photos below).
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-num" style="background:#b45309;">1</div><p class="section-title">Timeline</p></div>
+      <table>
+        <thead><tr><th style="width:130px;">Date</th><th>Event</th></tr></thead>
+        <tbody>
+          <tr><td>6 Feb 2026</td><td>Move-in.</td></tr>
+          <tr><td>10 Feb 2026</td><td>First aircon faults reported.</td></tr>
+          <tr><td>Feb – May 2026</td><td>Faults raised repeatedly by email and WhatsApp.</td></tr>
+          <tr><td>May 2026</td><td>3 of 6 units replaced (master bedroom + 2 offices).<span class="note">Contractor did not inspect the existing units or measure rooms. Offices fitted with 18k BTU units instead of 13k. Bedroom unit fitted without the wired controller (no sleep mode or scheduling). Lounge and spare room left on old R22 units; lounge replacement recommended and declined.</span></td></tr>
+          <tr><td>16 Oct 2026</td><td>Lounge unit fails again — will not cool, smells of oil. Reported to on-site maintenance and landlord.</td></tr>
+          <tr><td>20 Oct 2026</td><td>Technician attends. Cover and drip tray removed.<span class="note">Heavy, long-term corrosion along the full edge of the cooling coil. Dark damaged patch at top right, consistent with past damage or repair. Pipe joint insulation patched with tape. Drip tray stained brown/black with rust and sludge. This level of deterioration builds over years and would have been visible to any contractor who opened the unit — consistent with the May survey not inspecting the units.</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section">
+      <div class="section-header"><div class="section-num" style="background:#b45309;">2</div><p class="section-title">Photos — lounge unit inspection, 20 October 2026</p></div>
+      <div class="ac-grid">
+        <figure class="ac-fig"><img src="aircon/aircon-2026-10-20-1-coil.jpg" alt="Cooling coil — corrosion along full edge, damaged patch top right" loading="lazy" onclick="document.getElementById('lightbox-img').src=this.src;document.getElementById('lightbox').classList.add('active')"><figcaption>Cooling coil — corrosion along full edge, damaged patch top right</figcaption></figure>
+        <figure class="ac-fig"><img src="aircon/aircon-2026-10-20-3-coil-wide.jpg" alt="Wider view — coil corrosion and taped pipe joint" loading="lazy" onclick="document.getElementById('lightbox-img').src=this.src;document.getElementById('lightbox').classList.add('active')"><figcaption>Wider view — coil corrosion and taped pipe joint</figcaption></figure>
+        <figure class="ac-fig"><img src="aircon/aircon-2026-10-20-2-drip-tray.jpg" alt="Drip tray removed — rust and sludge build-up" loading="lazy" onclick="document.getElementById('lightbox-img').src=this.src;document.getElementById('lightbox').classList.add('active')"><figcaption>Drip tray removed — rust and sludge build-up</figcaption></figure>
+      </div>
+      <p class="note" style="margin-top:0.75rem;">Click a photo to enlarge. Original phone photos (with date/time data) held separately.</p>
     </div>
   </div>
 
